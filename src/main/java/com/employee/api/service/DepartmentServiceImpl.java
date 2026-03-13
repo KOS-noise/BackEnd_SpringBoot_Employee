@@ -19,11 +19,13 @@ public class DepartmentServiceImpl implements DepartmentService{
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public DepartmentDto getDepartmentById(Long departmentId) {
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<DepartmentDto> getAllDepartments() {
         return List.of();
