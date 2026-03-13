@@ -29,6 +29,11 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Transactional(readOnly = true)
     @Override
     public DepartmentDto getDepartmentById(Long departmentId) {
+        // 중요
+        departmentRepository.findById(departmentId) //Optional<Department>
+                .map(department -> DepartmentMapper.mapToDepartmentDto(department))
+                //.map(DepartmentMapper::mapToDepartmentDto)
+                .orElseThrow();
         return null;
     }
 
