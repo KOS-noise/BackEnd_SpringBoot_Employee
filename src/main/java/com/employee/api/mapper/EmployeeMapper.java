@@ -16,6 +16,16 @@ public class EmployeeMapper {
     }
 
     // Entity -> DTO (전체 부서 정보 포함)
+    // 여기가 문제가 된다.
+    /*
+    * 이 메서드는 직원의 정보뿐만 아니라 전체 부서 정보도 DTO로 변환하기 위해
+    * employee.getDepartment()를 호출하여 DepartmentMapper로 넘깁니다.
+    * 발생 과정: DTO 변환 과정에서 가짜 객체였던 부서의 실제 데이터(이름, 설명 등)를 읽으려 시도하게 되고,
+    * 이때 JPA는 어쩔 수 없이 DB에 부서 정보를 묻는 추가 쿼리를 실행합니다.
+    * 결과 (N+1 문제): 만약 직원 100명의 목록을 조회(쿼리 1번)한 뒤 이 매퍼를 100번 반복 실행하면,
+    * 각 직원의 부서 정보를 가져오기 위해 DB에 100번의 추가 쿼리(N번)가 연속으로 날아가게 됩니다.
+    * */
+
     public static EmployeeDto mapToEmployeeDepartmentDto(Employee employee){
         return EmployeeDto.builder()
                 .id(employee.getId())
