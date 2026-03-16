@@ -49,7 +49,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(
                         getNotFoundExceptionSupplier(
                                 "Employee is not exists with given id : ",
-                                employeeId));
+                                employeeId)
+                );
 
         return EmployeeMapper.mapToEmployeeDto(employee);
     }
@@ -57,29 +58,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(readOnly = true)
     @Override
     public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(EmployeeMapper::mapToEmployeeDepartmentDto)
+        List<Employee> employees = employeeRepository.findAll();
+        return employees.stream()
+                .map(EmployeeMapper::mapToEmployeeDto)
                 .toList();
+        //.map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
+        //.collect(Collectors.toList());
     }
 
     @Override
     public List<EmployeeDto> getAllEmployeesDepartment() {
         List<Employee> employees = employeeRepository.findAllWithDepartment();
         return employees.stream()
-                .map(EmployeeMapper::mapToEmployeeDto)
+                .map(EmployeeMapper::mapToEmployeeDepartmentDto)
                 .toList();
+
     }
 
     @Override
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(
-                        getNotFoundExceptionSupplier(
-                                "Employee is not exists with given id: ", employeeId)
+                        getNotFoundExceptionSupplier("Employee is not exists with given id : ", employeeId)
                 );
-
-        // setter 호출로 값을 연결
+        //setter 호출로 값을 변경
         employee.setFirstName(updatedEmployee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName());
         employee.setEmail(updatedEmployee.getEmail());
@@ -87,14 +89,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         Department department = departmentRepository.findById(updatedEmployee.getDepartmentId())
                 .orElseThrow(
                         getNotFoundExceptionSupplier(
-                                "Employee is not exists with given id: ",updatedEmployee.getDepartmentId())
+                                "Department is not exists with a given id: ", updatedEmployee.getDepartmentId())
                 );
-
-        // Employee 와 Department 연결
+        //Employee와 Department 연결
         employee.setDepartment(department);
 
         Employee updatedEmployeeObj = employeeRepository.save(employee);
-
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
     }
 
@@ -102,8 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(
-                        getNotFoundExceptionSupplier(
-                                "Employee is not exists with given id: ", employeeId)
+                        getNotFoundExceptionSupplier("Employee is not exists with given id : ", employeeId)
                 );
         employeeRepository.delete(employee);
     }
