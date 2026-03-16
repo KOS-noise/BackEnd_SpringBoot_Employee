@@ -74,23 +74,23 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Employee is not exists with given id: " + employeeId,
-                                HttpStatus.NOT_FOUND)
+                .orElseThrow(
+                        getNotFoundExceptionSupplier(
+                                "Employee is not exists with given id: ", employeeId)
                 );
 
+        // setter 호출로 값을 연결
         employee.setFirstName(updatedEmployee.getFirstName());
         employee.setLastName(updatedEmployee.getLastName());
         employee.setEmail(updatedEmployee.getEmail());
 
         Department department = departmentRepository.findById(updatedEmployee.getDepartmentId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Department is not exists with id: " + updatedEmployee.getDepartmentId(),
-                                HttpStatus.NOT_FOUND
-                        ));
+                .orElseThrow(
+                        getNotFoundExceptionSupplier(
+                                "Employee is not exists with given id: ",updatedEmployee.getDepartmentId())
+                );
 
+        // Employee 와 Department 연결
         employee.setDepartment(department);
 
         Employee updatedEmployeeObj = employeeRepository.save(employee);
@@ -100,6 +100,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(Long employeeId) {
-
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(
+                        getNotFoundExceptionSupplier(
+                                "Employee is not exists with given id: ", employeeId)
+                );
+        employeeRepository.delete(employee);
     }
 }
