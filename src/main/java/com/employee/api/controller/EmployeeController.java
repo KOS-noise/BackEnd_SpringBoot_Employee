@@ -4,8 +4,8 @@ import com.employee.api.dto.EmployeeDto;
 import com.employee.api.entity.Employee;
 import com.employee.api.repository.EmployeeRepository;
 import com.employee.api.service.EmployeeService;
+
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +62,7 @@ public class EmployeeController {
     // Build Update Employee REST API
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
-                                                      @RequestBody EmployeeDto updatedEmployee){
+                                                      @Valid @RequestBody EmployeeDto updatedEmployee){
         EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
         return ResponseEntity.ok(employeeDto);
     }
