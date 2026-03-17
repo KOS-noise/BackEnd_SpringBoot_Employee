@@ -23,8 +23,8 @@ public class EmployeeDto {
     @Email
     private String email;
 
-    @NotNull(message = "직원의 부서코드는 필수 입력 항목입니다.") // null 방지 (필수)
-    @Positive(message = "올바른 부서 형식이 아닙니다.") // 0 또는 음수 방지
+    @NotNull(message = "직원의 departmentId는 필수 입력 항목입니다.") // null 방지 (필수)
+    @Positive(message = "올바른 부서 코드가 아닙니다.") // 0 또는 음수 방지
     private Long departmentId;
 
     private DepartmentDto departmentDto;
