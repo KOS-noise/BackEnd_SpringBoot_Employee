@@ -60,8 +60,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeDto> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream()
-                //.map(EmployeeMapper::mapToEmployeeDto)  //Employee 정보만 변환
-                .map(EmployeeMapper::mapToEmployeeDepartmentDto)//Employee 와 Department 둘다 변환
+                .map(EmployeeMapper::mapToEmployeeDto)  //Employee 정보만 변환
+                // .map(EmployeeMapper::mapToEmployeeDepartmentDto)//Employee 와 Department 둘다 변환
                 .toList();
         //.map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
         //.collect(Collectors.toList());
