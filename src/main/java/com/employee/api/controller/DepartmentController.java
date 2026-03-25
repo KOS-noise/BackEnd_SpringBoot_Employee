@@ -1,9 +1,10 @@
 package com.employee.api.controller;
 
 import com.employee.api.dto.DepartmentDto;
+import com.employee.api.dto.PageResponse;
 import com.employee.api.service.DepartmentService;
+
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,4 +55,13 @@ public class DepartmentController {
         return ResponseEntity.ok("Department deleted successfully!.");
     }
 
+    @GetMapping("/page")
+    public ResponseEntity<PageResponse<DepartmentDto>> getDepartmentsPage(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.ok(departmentService.getDepartmentsPage(pageNo, pageSize, sortBy, sortDir));
+    }
 }
