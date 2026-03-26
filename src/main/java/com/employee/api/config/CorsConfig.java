@@ -16,10 +16,13 @@ public class CorsConfig {
     @Bean
     public FilterRegistrationBean<?> corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // 명시적인 도메인만 허용
-        //configuration.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:80","http://localhost"));
-        configuration.setAllowedOriginPatterns(List.of("*"));
-        // Credentials은 필요한 경우에만
+        // credentials=true 일 때는 * 불가 — 브라우저가 CORS 차단. Vite(3000/5173) + Postman 대비
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+        ));
         configuration.setAllowCredentials(true);
         // 필요한 헤더만 허용
         configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept",

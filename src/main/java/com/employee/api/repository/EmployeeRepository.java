@@ -1,6 +1,9 @@
 package com.employee.api.repository;
 
 import com.employee.api.entity.Employee;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,5 +28,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // 5. [성능 최적화] 부서 정보까지 한 번에 가져오기 (Fetch Join)
     @Query("SELECT e FROM Employee e JOIN FETCH e.department")
     List<Employee> findAllWithDepartment();
-    
+
+    /**
+     * 페이징 시 department를 함께 로드 (@Query 필수 — 메서드명만으로는 파생쿼리 파싱 오류 남)
+     */
+    @EntityGraph(attributePaths = {"department"})
+    @Query("SELECT e FROM Employee e")
+    Page<Employee> findAllPagedWithDepartment(Pageable pageable);
+
 }

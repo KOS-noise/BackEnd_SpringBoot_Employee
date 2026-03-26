@@ -72,6 +72,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //.collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageResponse<EmployeeDto> getEmployeesPage(int pageNo, int pageSize, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
@@ -79,7 +80,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Page<Employee> page = employeeRepository.findAll(pageable);
+        Page<Employee> page = employeeRepository.findAllPagedWithDepartment(pageable);
 
         List<EmployeeDto> content = page.getContent()
                 .stream()

@@ -6,12 +6,16 @@ import com.employee.api.entity.Employee;
 public class EmployeeMapper {
     // Entity -> DTO (ID만 포함)
     public static EmployeeDto mapToEmployeeDto(Employee employee){
+        Long deptId = null;
+        if (employee.getDepartment() != null) {
+            deptId = employee.getDepartment().getId();
+        }
         return EmployeeDto.builder()
                 .id(employee.getId())
                 .firstName(employee.getFirstName())
                 .lastName(employee.getLastName())
                 .email(employee.getEmail())
-                .departmentId(employee.getDepartment().getId())
+                .departmentId(deptId)
                 .build();
     }
 

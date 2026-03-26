@@ -29,8 +29,8 @@ public class EmployeeController {
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
-    // Build Get Employee REST API
-    @GetMapping("/{id}")
+    // Build Get Employee REST API (숫자 id만 — 아니면 /page 가 /{id}로 잡혀 Long 변환 실패)
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long employeeId){
         EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
         return ResponseEntity.ok(employeeDto);
@@ -61,7 +61,7 @@ public class EmployeeController {
 
 
     // Build Update Employee REST API
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
                                                       @Valid @RequestBody EmployeeDto updatedEmployee){
         EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
@@ -69,7 +69,7 @@ public class EmployeeController {
     }
 
     // Build Delete Employee REST API
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId){
         employeeService.deleteEmployee(employeeId);
         return ResponseEntity.ok("Employee deleted successfully!.");
