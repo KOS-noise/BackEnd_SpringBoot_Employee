@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,14 +23,21 @@ public class EmployeeController {
     private final EmployeeService employeeService;
     private final EmployeeRepository employeeRepository;
 
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "Welcome this endpoint is not secure";
+    }
+
     // Build Add Employee REST API
     @PostMapping
+
     public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto){
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
     // Build Get Employee REST API (숫자 id만 — 아니면 /page 가 /{id}로 잡혀 Long 변환 실패)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@PathVariable("id") Long employeeId){
         EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
@@ -38,6 +46,7 @@ public class EmployeeController {
 
     // Build Get All Employees REST API
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<EmployeeDto>> getAllEmployees(){
         List<EmployeeDto> employees = employeeService.getAllEmployees();
         return ResponseEntity.ok(employees);
@@ -76,6 +85,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/email/{email}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<EmployeeDto> getEmployeeByEmail(@PathVariable String email){
         EmployeeDto employeeDto = employeeService.getEmployeeByEmail(email);
         return ResponseEntity.ok(employeeDto);
@@ -83,6 +93,7 @@ public class EmployeeController {
 
     //http://localhost:8080/api/employees/page?pageNo=1&pageSize=5&sortBy=id&sortDir=asc
     @GetMapping("/page")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<PageResponse<EmployeeDto>> getEmployeesPage(
             @RequestParam(defaultValue = "0") int pageNo,
             @RequestParam(defaultValue = "10") int pageSize,
